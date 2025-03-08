@@ -1,0 +1,55 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# PyCharm project files
+.idea/
+
+# VSCode project files
+.vscode/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Pytest cache
+.cache/
+
+# Django files
+*.log
+*.sqlite3
+db.sqlite3
+
+# Model checkpoints and outputs
+*.pt
+*.pth
+model_checkpoints/
+output/
+
+# TensorFlow files (if applicable)
+*.h5
+*.pb
+
+# Environment variable file (can contain sensitive data)
+.env
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Docker files
+*.docker
+Dockerfile
+docker-compose.yml
+
+# System files
+.DS_Store
+Thumbs.db
+
