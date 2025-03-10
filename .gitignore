@@ -1,3 +1,9 @@
+# Raw datasets
+datasets/
+
+# Model state files
+models/
+
 # Byte-compiled files
 *.pyc
 *.pyo
