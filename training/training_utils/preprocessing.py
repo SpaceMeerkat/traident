@@ -40,6 +40,8 @@ def inject_fake_signal(cube, row, column, channel, amplitude, duration):
     rms = np.sqrt((pixel*pixel).sum()/cube.shape[0]) # Calculate the rms of the pixel 
     signal = normal_sample(xarray, channel, amplitude*rms, duration) # Make the clean signal
     signal[pixel == 0] = 0 # Remove signal where original cube == 0
+    signal[:channel-5*duration] = 0 # clipping signals wider than a real burst
+    signal[channel+5*duration] = 0 # clipping signals wider than a real burst
     cube[:, row, column] += signal # Inject the signal into the cube
     return cube
 
