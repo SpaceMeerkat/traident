@@ -85,6 +85,23 @@ def compute_std(t):
     
     return np.nanstd(selected_data, axis=0, ddof=1)  # Use ddof=1 for unbiased std
 
+def fft_autocorr_chunk(chunk):
+    # Zero-pad to 2*T for full autocorr
+    T, H, W = chunk.shape
+    n = 2 * T
+
+    # FFT along time axis
+    fft_chunk = np.fft.fft(chunk, n=n, axis=0)
+    
+    # Power spectrum
+    power = np.abs(fft_chunk)**2
+
+    # IFFT to get autocorrelation
+    ac_full = np.fft.ifft(power, axis=0).real
+
+    # Normalize and return only positive lags
+    return ac_full[:T]
+
 # def flux_grad_input(chunk):
 
 #     flux_grad_raw = np.diff(chunk, 0) 
