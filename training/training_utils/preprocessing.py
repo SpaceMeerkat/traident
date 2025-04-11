@@ -29,6 +29,7 @@ def inject_fake_periodic_signal(cube, row, column, phase, amplitude, wavelength)
     xarray = np.linspace(0,2*np.pi,cube.shape[0])
     freq = cube.shape[0] / wavelength
     signal = amplitude * rms * np.sin(phase + xarray*freq)
+    signal[signal < 0] = 0 # change the sin wave into an only positive signal
     signal[pixel == 0] = 0 # Remove signal where original cube == 0
     cube[:, row, column] += signal # Inject the signal into the cube
     return cube
