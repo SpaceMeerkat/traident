@@ -29,8 +29,37 @@ def inject_fake_periodic_signal(cube, row, column, phase, amplitude, wavelength)
     xarray = np.linspace(0,2*np.pi,cube.shape[0])
     freq = cube.shape[0] / wavelength
     signal = amplitude * rms * np.sin(phase + xarray*freq)
+    signal[signal < 0] = 0 # change the sin wave into an only positive signal
     signal[pixel == 0] = 0 # Remove signal where original cube == 0
     cube[:, row, column] += signal # Inject the signal into the cube
+    return cube
+
+def inject_periodic_gaussian_signal(cube, row, column, phase, amplitude, wavelength, width=8):
+    pixel = cube[:, row, column] # GET the current pixel timeseries
+    rms = np.sqrt((pixel*pixel).sum()/cube.shape[0]) # Calculate the rms of the pixel 
+    n_frames = len(pixel)
+    xarray = np.arange(n_frames)
+
+    freq = 2 * np.pi / wavelength
+    center_offset = (phase / (2 * np.pi)) * wavelength  # convert phase to frame offset
+
+    # Calculate all center positions of Gaussians
+    centers = np.arange(-wavelength, n_frames + wavelength, wavelength) + center_offset
+
+    # Width of each Gaussian accounting for sigma not equating to wing width and seconds conversion: width/8/6
+    sigma = width/48
+
+    # Sum of all Gaussian peaks
+    signal = np.zeros(n_frames)
+    for c in centers:
+        signal += np.exp(-0.5 * ((xarray - c) / sigma) ** 2)
+
+    # Normalize and scale
+    signal *= (amplitude * rms)
+    signal[pixel == 0] = 0
+
+    cube[:, row, column] += signal
+
     return cube
 
 def inject_fake_signal(cube, row, column, channel, amplitude, duration):
