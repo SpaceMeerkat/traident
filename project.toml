@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "traident"
+version = "0.1.0"
+description = "Using self supervised machine learning to map timeseries data from the MeerKAT telescope. Mappings (or embeddings) are used in conjunction with anomaly scoring methods to identify interesting time series behaviours."
+authors = ["Dr James M. Dawson Rhodes University/SARAO"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+# Regular packages
+numpy = "*"
+matplotlib = "*"
+tqdm = "*"
+scikit-learn = ">=1.6.1"
+mpi4py = "*"
+xarray = "*"
+argparse = "*"
+pyyaml = "*"  # Correct package name for 'yaml' in PyPI is 'pyyaml'
+
+# PyTorch from custom index
+torch = { version = "*", source = "pytorch-cpu" }
+torchvision = { version = "*", source = "pytorch-cpu" }
+torchaudio = { version = "*", source = "pytorch-cpu" }
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+default = false

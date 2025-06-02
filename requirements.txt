@@ -1,0 +1,14 @@
+# Core dependencies
+numpy
+matplotlib
+tqdm
+scikit-learn>=1.6.1
+mpi4py
+xarray
+pyyaml
+
+# PyTorch CPU versions (with custom index)
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision --index-url https://download.pytorch.org/whl/cpu
+torchaudio --index-url https://download.pytorch.org/whl/cpu
+
