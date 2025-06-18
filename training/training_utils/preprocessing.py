@@ -8,10 +8,16 @@ def getChunk(dataset, ra_rank, dec_rank, blockSize=64):
     chunk = cube.isel(**{'DEC--SIN': slice(dec[0], dec[1]), 'RA---SIN': slice(ra[0], ra[1])}).data
     return chunk
 
+# def getChunkIndexed(dataset, ra, dec, blockSize=64):
+#     dec = (dec - blockSize, dec + blockSize)
+#     ra = (ra - blockSize, ra + blockSize)
+#     chunk = dataset.isel(**{'DEC--SIN': slice(dec[0], dec[1]), 'RA---SIN': slice(ra[0], ra[1])}).data
+#     return chunk
+
 def getChunkIndexed(dataset, ra, dec, blockSize=64):
-    dec = (dec - blockSize, dec + blockSize)
-    ra = (ra - blockSize, ra + blockSize)
-    chunk = dataset.isel(**{'DEC--SIN': slice(dec[0], dec[1]), 'RA---SIN': slice(ra[0], ra[1])}).data
+    dec = (dec, dec + blockSize)
+    ra = (ra, ra + blockSize)
+    chunk = dataset.isel(**{'Y': slice(dec[0], dec[1]), 'X': slice(ra[0], ra[1])}).compute().values
     return chunk
 
 def normal_sample(xarray, channel, amplitude, duration):
@@ -84,6 +90,19 @@ def compute_std(t):
         return np.full((height, width), np.nan)  # Return NaN array if no valid values
     
     return np.nanstd(selected_data, axis=0, ddof=1)  # Use ddof=1 for unbiased std
+
+def fft_autocorr_chunk(chunk):
+    # Zero-pad to 2*T for full autocorr
+    T, H, W = chunk.shape
+    n = 2 * T
+    # FFT along time axis
+    fft_chunk = np.fft.fft(chunk, n=n, axis=0)
+    # Power spectrum
+    power = np.abs(fft_chunk)**2
+    # IFFT to get autocorrelation
+    ac_full = np.fft.ifft(power, axis=0).real
+    # Normalize and return only positive lags
+    return ac_full[:T]
 
 # def flux_grad_input(chunk):
 
